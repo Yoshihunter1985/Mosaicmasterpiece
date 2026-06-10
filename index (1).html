@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zach's Mosaic Masterpieces</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Arial Rounded MT Bold', 'Arial', sans-serif;
+    background-color: #e3000b;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 24px 24px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+  }
+
+  .title-img {
+    width: min(480px, 95vw);
+    margin-bottom: 18px;
+    display: block;
+  }
+
+  .topic-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    width: min(520px, 95vw);
+    margin-bottom: 18px;
+  }
+
+  .topic-btn {
+    background: #fff;
+    border: none;
+    border-radius: 16px;
+    padding: 14px 8px 10px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    color: #222;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.18);
+    transition: transform 0.1s, box-shadow 0.1s;
+    line-height: 1.2;
+    text-align: center;
+  }
+  .topic-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.18); }
+  .topic-btn img {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+  }
+  .topic-btn.active {
+    background: #ffe200;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.22);
+  }
+
+  .design-area {
+    background: #fff;
+    border-radius: 20px;
+    padding: 20px 16px 16px;
+    width: min(520px, 95vw);
+    box-shadow: 0 6px 0 rgba(0,0,0,0.15);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .design-area.visible { display: flex; }
+
+  .design-title {
+    font-size: 22px;
+    font-weight: 900;
+    color: #e3000b;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+
+  .plate-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  .plate-indicator img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    flex-shrink: 0;
+  }
+
+  .orientation-badge {
+    background: #e3000b;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .plate-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  canvas#plateCanvas {
+    border-radius: 8px;
+    image-rendering: pixelated;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    width: 100%;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #333;
+  }
+  .legend-swatch {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1.5px solid rgba(0,0,0,0.15);
+    flex-shrink: 0;
+  }
+
+  .shuffle-btn {
+    background: #e3000b;
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 32px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+    transition: transform 0.1s, box-shadow 0.1s;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+  }
+  .shuffle-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
+</style>
+</head>
+<body>
+
+<img class="title-img" src="https://raw.githubusercontent.com/Yoshihunter1985/Mosaicmasterpiece/main/Zach-s-Mosaic-Masterpieces-6-8-2026.png" alt="Zach's Mosaic Masterpieces" onerror="this.style.display='none'">
+
+<div class="topic-grid">
+  <button class="topic-btn" onclick="selectTopic('ninjago', this)">
+    <img src="https://raw.githubusercontent.com/Yoshihunter1985/Mosaicmasterpiece/main/kai.png" alt="">
+    Ninjago
+  </button>
+  <button class="topic-btn" onclick="selectTopic('nature', this)">
+    <img src="https://raw.githubusercontent.com/Yoshihunter1985/Mosaicmasterpiece/main/dino.png" alt="">
+    Nature &amp; Animals
+  </button>
+  <button class="topic-btn" onclick="selectTopic('starwars', this)">
+    <img src="https://raw.githubusercontent.com/Yoshihunter1985/Mosaicmasterpiece/main/star wars.png" alt="">
+    Star Wars
+  </button>
+  <button class="topic-btn" onclick="selectTopic('smallplate', this)">
+    <img src="https://raw.githubusercontent.com/Yoshihunter1985/Mosaicmasterpiece/main/small plate various.png" alt="">
+    Small Plate
+  </button>
+</div>
+
+<div class="design-area" id="designArea">
+  <div class="design-title" id="designTitle">Heart</div>
+  <div class="plate-indicator">
+    <img id="plateIcon" src="" alt="" style="display:none;">
+    <div class="orientation-badge" id="orientationBadge">Portrait · 4×6</div>
+  </div>
+  <div class="plate-wrap">
+    <canvas id="plateCanvas"></canvas>
+  </div>
+  <div class="legend" id="legend"></div>
+  <button class="shuffle-btn" onclick="shuffle()">🔀 New Design</button>
+</div>
+
+<script>
+const CELL = 36;
+
+const COLOUR_MAP = {
+  Y:  { fill: '#FFD700', label: 'Yellow' },
+  R:  { fill: '#CC2200', label: 'Red' },
+  B:  { fill: '#1155CC', label: 'Blue' },
+  W:  { fill: '#F2F2F2', label: 'White' },
+  G:  { fill: '#228B22', label: 'Green' },
+  K:  { fill: '#222222', label: 'Black' },
+  P:  { fill: '#FF69B4', label: 'Pink' },
+  O:  { fill: '#FF8800', label: 'Orange' },
+  T:  { fill: '#008B8B', label: 'Teal' },
+  TB: { fill: '#7EC8E3', label: 'Trans Blue' },
+  OL: { fill: '#6B7C3A', label: 'Olive Green' },
+};
+
+// Colour pairs for letters/numbers: [background, foreground]
+const PAIRS = [
+  ['B','Y'], ['R','W'], ['K','Y'], ['G','W'], ['K','W'],
+  ['B','W'], ['R','Y'], ['T','W'], ['K','R'], ['B','O'],
+  ['G','Y'], ['K','TB'], ['R','B'], ['OL','Y'], ['T','Y'],
+  ['K','P'], ['B','P'], ['R','K'], ['G','K'], ['T','O'],
+];
+
+function makeLetter(char, bg, fg, cols, rows) {
+  const grid = [];
+  const letters = {
+    'A': [
+      '_','#','#','_',
+      '#','_','_','#',
+      '#','#','#','#',
+      '#','_','_','#',
+      '#','_','_','#',
+      '#','_','_','#',
+    ],
+    'B': [
+      '#','#','#','_',
+      '#','_','_','#',
+      '#','#','#','_',
+      '#','_','_','#',
+      '#','_','_','#',
+      '#','#','#','_',
+    ],
+    'C': [
+      '_','#','#','#',
+      '#','_','_','_',
+      '#','_','_','_',
+      '#','_','_','_',
+      '#','_','_','_',
+      '_','#','#','#',
+    ],
+    'D': [
+      '#','#','#','_',
+      '#','_','_','#',
+      '#','_','_','#',
+      '#','_','_','#',
+      '#','_','_','#',
+      '#','#','#','_',
+    ],
+    'E': [
+      '#','#','#','#',
+      '#','_','_','_',
+      '#','#','#','_',
+      '#','_','_','_',
+      '#','_','_','_',
+      '#','#','#','#',
+    ],
+    'F': [
+      '#','#','#','#',
+      '#','_','_','_',
+      '#','#','#','_',
+      '#','_','_','_',
+      '#','_','_','_',
+      '#','_','_','_',
+    ],
+    'G': [
+      '_','#','#','#',
+      '#','_','_','_',
+      '#','_','#','#',
+      '#','_','_','#',
+      '#','_','_','#',
+      '_','#','#','#',
+    ],
+    'H': [
+      '#','_','_','#',
+      '#','_','_','#',
+      '#','#','#','#',
+      '#','_','_','#',
+      '#','_','_','#',
+      '#','_','_','#',
+    ],
+    'I': [
+      '#','#','#','#',
+      '_','_','#','_',
+      '_','_','#','_',
+      '_','_','#','_',
+      '_','_','#','_',
+      '#','#','#','#',
+    ],
+    'J': [
+      '_','_','_','#',
+      '_','_','_','#',
+      '_','_','_','#',
+      '#','_','_','#',
+      '#','_','_','#',
+      '_','#','#','_',
+    ],
+    'K': [
+      '#','_','_','#',
+      '#','_','#','_',
+      '#','#','_','_',
+      '#','#','_','_',
+      '#','_','#','_',
+      '#','_','_','#',
+    ],
+    'L': [
+      '#','_','_','_',
+      '#','_','_','_',
+      '#','_','_','_',
+      '#','_','_','_',
+      '#','_','_','_',
+      '#','#','#','#',
+    ],
+    'M': [
+      '#','_','_','#',
+      '#','#','#','#',
+      '#','#','#','#',
+      '#','_','_','#',
+      '#','_','_','#',
+      '#','_','_','#',
+    ],
+    'N': [
+      '#','_','_','#',
+      '#','#','_','#',
+      '#','#','_','#',
+      '#','_','#','#',
+      '#','_','#','#',
+      '#','_','_','#',
+    ],
+    'O': [
+      '_','#','#','_',
+      '#','_','_','#',
+      '#','_','_','#',
+      '#','_','_','#',
+      '#','_','_','#',
+      '_','#','#','_',
+    ],
+    'P': [
+      '#','#','#','_',
+      '#','_','_','#',
+      '#','#','#','_',
+      '#','_','_','_',
+      '#','_','_','_',
+      '#','_','_','_',
+    ],
+    'Q': [
+      '_','#','#','_',
+      '#','_','_','#',
+      '#','_','_','#',
+      '#','_','#','#',
+      '#','_','_','#',
+      '_','#','#','#',
+    ],
+    'R': [
+      '#','#','#','_',
+      '#','_','_','#',
+      '#','#','#','_',
+      '#','_','#','_',
+      '#','_','_','#',
+      '#','_','_','#',
+    ],
+    'S': [
+      '_','#','#','#',
+      '#','_','_','_',
+      '_','#','#','_',
+      '_','_','_','#',
+      '_','_','_','#',
+      '#','#','#','_',
+    ],
+    'T': [
+      '#','#','#','#',
+      '_','_','#','_',
+      '_','_','#','_',
+      '_','_','#','_',
+      '_','_','#','_',
+      '_','_','#','_',
+    ],
+    'U': [
+      '#','_','_','#',
+      '#','_','_','#',
+      '#','_','_','#',
+      '#','_','_','#',
+      '#','_','_','#',
+      '_','#','#','_',
+    ],
+    'V': [
+      '#','_','_','#',
+      '#','_','_','#',
+      '#','_','_','#',
+      '#','_','_','#',
+      '_','#','#','_',
+      '_','_','#','_',
+    ],
+    'W': [
+      '#','_','_','#',
+      '#','_','_','#',
+      '#','_','_','#',
+      '#','#','#','#',
+      '#','#','#','#',
+      '#','_','_','#',
+    ],
+    'X': [
+      '#','_','_','#',
+      '#','_','_','#',
+      '_','#','#','_',
+      '_','#','#','_',
+      '#','_','_','#',
+      '#','_','_','#',
+    ],
+    'Y': [
+      '#','_','_','#',
+      '#','_','_','#',
+      '_','#','#','_',
+      '_','_','#','_',
+      '_','_','#','_',
+      '_','_','#','_',
+    ],
+    'Z': [
+      '#','#','#','#',
+      '_','_','_','#',
+      '_','_','#','_',
+      '_','#','_','_',
+      '#','_','_','_',
+      '#','#','#','#',
+    ],
+    '0': [
+      '_','#','#','_',
+      '#','_','_','#',
+      '#','_','#','#',
+      '#','#','_','#',
+      '#','_','_','#',
+      '_','#','#','_',
+    ],
+    '1': [
+      '_','_','#','_',
+      '_','#','#','_',
+      '_','_','#','_',
+      '_','_','#','_',
+      '_','_','#','_',
+      '_','#','#','#',
+    ],
+    '2': [
+      '_','#','#','_',
+      '#','_','_','#',
+      '_','_','_','#',
+      '_','_','#','_',
+      '_','#','_','_',
+      '#','#','#','#',
+    ],
+    '3': [
+      '#','#','#','_',
+      '_','_','_','#',
+      '_','#','#','_',
+      '_','_','_','#',
+      '_','_','_','#',
+      '#','#','#','_',
+    ],
+    '4': [
+      '#','_','_','#',
+      '#','_','_','#',
+      '#','#','#','#',
+      '_','_','_','#',
+      '_','_','_','#',
+      '_','_','_','#',
+    ],
+    '5': [
+      '#','#','#','#',
+      '#','_','_','_',
+      '#','#','#','_',
+      '_','_','_','#',
+      '_','_','_','#',
+      '#','#','#','_',
+    ],
+    '6': [
+      '_','#','#','#',
+      '#','_','_','_',
+      '#','#','#','_',
+      '#','_','_','#',
+      '#','_','_','#',
+      '_','#','#','_',
+    ],
+    '7': [
+      '#','#','#','#',
+      '_','_','_','#',
+      '_','_','#','_',
+      '_','#','_','_',
+      '_','#','_','_',
+      '_','#','_','_',
+    ],
+    '8': [
+      '_','#','#','_',
+      '#','_','_','#',
+      '_','#','#','_',
+      '#','_','_','#',
+      '#','_','_','#',
+      '_','#','#','_',
+    ],
+    '9': [
+      '_','#','#','_',
+      '#','_','_','#',
+      '_','#','#','#',
+      '_','_','_','#',
+      '_','_','_','#',
+      '_','#','#','_',
+    ],
+  };
+
+  const pattern = letters[char];
+  if (!pattern) return Array(rows * cols).fill('_');
+  return pattern.map(c => c === '#' ? fg : (c === '_' ? bg : '_'));
+}
+
+// All small plate designs
+function buildSmallPlateDesigns() {
+  const designs = [];
+
+  // Letters A-Z
+  const allChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.split('');
+  allChars.forEach((ch, i) => {
+    const pair = PAIRS[i % PAIRS.length];
+    const grid = makeLetter(ch, pair[0], pair[1], 4, 6);
+    designs.push({
+      name: ch.match(/[0-9]/) ? `Number ${ch}` : `Letter ${ch}`,
+      orientation: 'portrait',
+      orientLabel: 'Portrait · 4×6',
+      cols: 4, rows: 6,
+      grid
+    });
+  });
+
+  // Approved shape designs
+  designs.push({
+    name: 'Mushroom',
+    orientation: 'portrait',
+    orientLabel: 'Portrait · 4×6',
+    cols: 4, rows: 6,
+    grid: [
+      '_','R','R','_',
+      'R','R','R','R',
+      'R','W','R','W',
+      'R','R','R','R',
+      '_','W','W','_',
+      '_','W','W','_',
+    ]
+  });
+
+  designs.push({
+    name: 'Flower',
+    orientation: 'portrait',
+    orientLabel: 'Portrait · 4×6',
+    cols: 4, rows: 6,
+    grid: [
+      '_','P','P','_',
+      'P','Y','Y','P',
+      'P','Y','Y','P',
+      '_','P','P','_',
+      '_','_','G','_',
+      '_','_','G','_',
+    ]
+  });
+
+  designs.push({
+    name: 'Checkerboard',
+    orientation: 'portrait',
+    orientLabel: 'Portrait · 4×6',
+    cols: 4, rows: 6,
+    grid: [
+      'K','W','K','W',
+      'W','K','W','K',
+      'K','W','K','W',
+      'W','K','W','K',
+      'K','W','K','W',
+      'W','K','W','K',
+    ]
+  });
+
+  designs.push({
+    name: 'Diamond Gem',
+    orientation: 'portrait',
+    orientLabel: 'Portrait · 4×6',
+    cols: 4, rows: 6,
+    grid: [
+      '_','TB','TB','_',
+      'TB','W','TB','TB',
+      'TB','TB','TB','TB',
+      'TB','TB','TB','TB',
+      '_','TB','TB','_',
+      '_','_','_','_',
+    ]
+  });
+
+  designs.push({
+    name: 'Fish',
+    orientation: 'landscape',
+    orientLabel: 'Landscape · 6×4',
+    cols: 6, rows: 4,
+    grid: [
+      'O','_','_','B','B','_',
+      'O','O','B','B','K','B',
+      'O','O','B','B','B','B',
+      'O','_','_','B','B','_',
+    ]
+  });
+
+  designs.push({
+    name: 'Train Carriage',
+    orientation: 'landscape',
+    orientLabel: 'Landscape · 6×4',
+    cols: 6, rows: 4,
+    grid: [
+      'R','R','R','R','R','R',
+      'R','TB','R','TB','R','R',
+      'R','R','R','R','R','R',
+      '_','K','K','_','K','K',
+    ]
+  });
+
+  designs.push({
+    name: 'Sunset Stripes',
+    orientation: 'landscape',
+    orientLabel: 'Landscape · 6×4',
+    cols: 6, rows: 4,
+    grid: [
+      'R','R','R','R','R','R',
+      'O','O','O','O','O','O',
+      'Y','Y','Y','Y','Y','Y',
+      'T','T','T','T','T','T',
+    ]
+  });
+
+  designs.push({
+    name: 'Rainbow',
+    orientation: 'landscape',
+    orientLabel: 'Landscape · 6×4',
+    cols: 6, rows: 4,
+    grid: [
+      '_','R','R','R','R','_',
+      'R','O','O','O','O','R',
+      '_','Y','Y','Y','Y','_',
+      '_','_','B','B','_','_',
+    ]
+  });
+
+  // Semicircle designs (4 rows × 8 cols, active studs: row0=[3,4], row1=[1-6], row2=[1-6], row3=[0-7])
+  const SEMI_ACTIVE = [[3,4],[1,2,3,4,5,6],[1,2,3,4,5,6],[0,1,2,3,4,5,6,7]];
+
+  const semiDesigns = [
+    { name: 'Rainbow Arc', grid: [
+      '_','_','_','R','O','_','_','_',
+      '_','R','O','Y','G','B','T','_',
+      '_','O','Y','G','B','T','P','_',
+      'Y','G','B','T','P','W','W','W',
+    ]},
+    { name: 'Sunset', grid: [
+      '_','_','_','R','R','_','_','_',
+      '_','R','R','O','O','R','R','_',
+      '_','O','O','Y','Y','O','O','_',
+      'T','T','T','T','T','T','T','T',
+    ]},
+    { name: 'Diagonal Stripes', grid: [
+      '_','_','_','B','Y','_','_','_',
+      '_','B','Y','B','Y','B','Y','_',
+      '_','Y','B','Y','B','Y','B','_',
+      'B','Y','B','Y','B','Y','B','Y',
+    ]},
+    { name: 'Bulls-eye', grid: [
+      '_','_','_','R','R','_','_','_',
+      '_','W','W','R','R','W','W','_',
+      '_','R','R','W','W','R','R','_',
+      'W','W','R','R','R','R','W','W',
+    ]},
+    { name: 'Ocean Waves', grid: [
+      '_','_','_','TB','TB','_','_','_',
+      '_','TB','TB','B','B','TB','TB','_',
+      '_','B','B','TB','TB','B','B','_',
+      'W','W','W','W','W','W','W','W',
+    ]},
+    { name: 'Teal & Pink Pop', grid: [
+      '_','_','_','T','P','_','_','_',
+      '_','T','P','T','P','T','P','_',
+      '_','P','T','P','T','P','T','_',
+      'T','P','T','P','T','P','T','P',
+    ]},
+    { name: 'Vertical Stripes', grid: [
+      '_','_','_','G','Y','_','_','_',
+      '_','G','Y','G','Y','G','Y','_',
+      '_','G','Y','G','Y','G','Y','_',
+      'G','Y','G','Y','G','Y','G','Y',
+    ]},
+    { name: 'Concentric Arcs', grid: [
+      '_','_','_','K','K','_','_','_',
+      '_','K','K','Y','Y','K','K','_',
+      '_','Y','Y','R','R','Y','Y','_',
+      'R','R','Y','K','K','Y','R','R',
+    ]},
+  ];
+
+  semiDesigns.forEach(d => {
+    designs.push({
+      name: d.name,
+      orientLabel: 'Semicircle · 8×4',
+      cols: 8, rows: 4,
+      isSemicircle: true,
+      semiActive: SEMI_ACTIVE,
+      grid: d.grid
+    });
+  });
+
+  // Round plate designs (6×6 grid, active: 2-4-6-6-4-2)
+  const ROUND_ACTIVE = [
+    [2,3],
+    [1,2,3,4],
+    [0,1,2,3,4,5],
+    [0,1,2,3,4,5],
+    [1,2,3,4],
+    [2,3]
+  ];
+
+  const roundDesigns = [
+    { name: 'Smiley face', grid: [
+      '_','_','Y','Y','_','_',
+      '_','Y','K','K','Y','_',
+      'Y','Y','Y','Y','Y','Y',
+      'Y','K','Y','Y','K','Y',
+      '_','Y','K','K','Y','_',
+      '_','_','Y','Y','_','_',
+    ]},
+    { name: 'Sun', grid: [
+      '_','_','Y','Y','_','_',
+      '_','Y','O','O','Y','_',
+      'Y','O','O','O','O','Y',
+      'Y','O','O','O','O','Y',
+      '_','Y','O','O','Y','_',
+      '_','_','Y','Y','_','_',
+    ]},
+    { name: 'Flower', grid: [
+      '_','_','P','P','_','_',
+      '_','P','Y','Y','P','_',
+      'P','Y','Y','Y','Y','P',
+      'P','Y','Y','Y','Y','P',
+      '_','P','Y','Y','P','_',
+      '_','_','P','P','_','_',
+    ]},
+    { name: 'Bullseye', grid: [
+      '_','_','R','R','_','_',
+      '_','R','W','W','R','_',
+      'R','W','R','R','W','R',
+      'R','W','R','R','W','R',
+      '_','R','W','W','R','_',
+      '_','_','R','R','_','_',
+    ]},
+    { name: 'Ninja face', grid: [
+      '_','_','K','K','_','_',
+      '_','K','K','K','K','_',
+      'K','K','W','W','K','K',
+      'K','K','K','K','K','K',
+      '_','K','K','K','K','_',
+      '_','_','K','K','_','_',
+    ]},
+    { name: 'Coin / medal', grid: [
+      '_','_','Y','Y','_','_',
+      '_','Y','O','O','Y','_',
+      'Y','O','Y','Y','O','Y',
+      'Y','O','Y','Y','O','Y',
+      '_','Y','O','O','Y','_',
+      '_','_','Y','Y','_','_',
+    ]},
+    { name: 'Snowflake', grid: [
+      '_','_','W','W','_','_',
+      '_','TB','W','W','TB','_',
+      'W','W','TB','TB','W','W',
+      'W','W','TB','TB','W','W',
+      '_','TB','W','W','TB','_',
+      '_','_','W','W','_','_',
+    ]},
+    { name: 'Cherry blossom', grid: [
+      '_','_','P','P','_','_',
+      '_','P','W','W','P','_',
+      'P','W','P','P','W','P',
+      'P','W','P','P','W','P',
+      '_','P','W','W','P','_',
+      '_','_','P','P','_','_',
+    ]},
+    { name: 'Eye', grid: [
+      '_','_','W','W','_','_',
+      '_','W','W','W','W','_',
+      'W','W','B','B','W','W',
+      'W','W','K','B','W','W',
+      '_','W','W','W','W','_',
+      '_','_','W','W','_','_',
+    ]},
+    { name: 'Teal swirl', grid: [
+      '_','_','T','W','_','_',
+      '_','T','T','W','W','_',
+      'T','W','T','W','W','W',
+      'T','T','T','W','T','W',
+      '_','T','T','W','W','_',
+      '_','_','T','W','_','_',
+    ]},
+  ];
+
+  roundDesigns.forEach(d => {
+    designs.push({
+      name: d.name,
+      orientLabel: 'Round · 6×6',
+      cols: 6, rows: 6,
+      isRound: true,
+      roundActive: ROUND_ACTIVE,
+      grid: d.grid
+    });
+  });
+
+  return designs;
+}
+
+const TOPICS = {
+  ninjago:    { label: 'Ninjago', designs: [] },
+  nature:     { label: 'Nature & Animals', designs: [] },
+  starwars:   { label: 'Star Wars', designs: [] },
+  smallplate: { label: 'Small Plate', designs: buildSmallPlateDesigns() },
+};
+
+let currentTopic = null;
+let currentDesign = null;
+
+function selectTopic(topic, btn) {
+  document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  currentTopic = topic;
+  shuffle();
+  document.getElementById('designArea').classList.add('visible');
+}
+
+function shuffle() {
+  if (!currentTopic) return;
+  const designs = TOPICS[currentTopic].designs;
+  if (!designs.length) return;
+  currentDesign = designs[Math.floor(Math.random() * designs.length)];
+  renderDesign(currentDesign);
+}
+
+function renderDesign(d) {
+  // Normalise grid — flatten nested arrays from editor exports
+  if (Array.isArray(d.grid[0])) d.grid = d.grid.flat();
+  document.getElementById('designTitle').textContent = d.name;
+  document.getElementById('orientationBadge').textContent = d.orientLabel || 'Portrait · 4×6';
+
+  const BASE = 'https://raw.githubusercontent.com/Yoshihunter1985/Mosaicmasterpiece/main/';
+  const plateIcon = document.getElementById('plateIcon');
+  if (d.isRound) {
+    plateIcon.src = BASE + 'circle plate.png';
+    plateIcon.style.display = 'block';
+  } else if (d.isSemicircle) {
+    plateIcon.src = BASE + 'semi circle.png';
+    plateIcon.style.display = 'block';
+  } else if (d.orientLabel && d.orientLabel.includes('4×6')) {
+    plateIcon.src = BASE + 'small plate.png';
+    plateIcon.style.display = 'block';
+  } else {
+    plateIcon.style.display = 'none';
+  }
+
+  const canvas = document.getElementById('plateCanvas');
+  const cols = d.cols, rows = d.rows;
+  const PAD = 6;
+  canvas.width  = cols * CELL + PAD * 2;
+  canvas.height = rows * CELL + PAD * 2;
+  const ctx = canvas.getContext('2d');
+
+  // Plate background (rectangular plates only)
+  if (!d.isSemicircle && !d.isRound) {
+    ctx.fillStyle = '#9E9E9E';
+    ctx.beginPath();
+    ctx.roundRect(0, 0, canvas.width, canvas.height, 10);
+    ctx.fill();
+  }
+
+  // Draw studs
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const isActive = d.isSemicircle ? d.semiActive[r].includes(c) : d.isRound ? d.roundActive[r].includes(c) : true;
+      if (!isActive) continue;
+      const key = d.grid[r * cols + c];
+      const x = PAD + c * CELL;
+      const y = PAD + r * CELL;
+      const colour = COLOUR_MAP[key];
+
+      ctx.fillStyle = '#9E9E9E';
+      ctx.beginPath();
+      ctx.roundRect(x + 1, y + 1, CELL - 2, CELL - 2, 5);
+      ctx.fill();
+
+      if (colour) {
+        ctx.fillStyle = colour.fill;
+        ctx.beginPath();
+        ctx.roundRect(x + 2, y + 2, CELL - 4, CELL - 4, 5);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,0.22)';
+        ctx.beginPath();
+        ctx.arc(x + CELL/2, y + CELL/2, CELL * 0.2, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.fillStyle = '#787878';
+        ctx.beginPath();
+        ctx.roundRect(x + 2, y + 2, CELL - 4, CELL - 4, 5);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,0.1)';
+        ctx.beginPath();
+        ctx.arc(x + CELL/2, y + CELL/2, CELL * 0.18, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+
+  // Legend
+  const counts = {};
+  d.grid.forEach((k, i) => {
+    if (k === '_' || !COLOUR_MAP[k]) return;
+    if (d.isSemicircle) {
+      const r = Math.floor(i / cols), c = i % cols;
+      if (!d.semiActive[r].includes(c)) return;
+    }
+    if (d.isRound) {
+      const r = Math.floor(i / cols), c = i % cols;
+      if (!d.roundActive[r].includes(c)) return;
+    }
+    counts[k] = (counts[k]||0)+1;
+  });
+  const legendEl = document.getElementById('legend');
+  legendEl.innerHTML = '';
+  Object.entries(counts).forEach(([k, v]) => {
+    const item = document.createElement('div');
+    item.className = 'legend-item';
+    item.innerHTML = `<div class="legend-swatch" style="background:${COLOUR_MAP[k].fill}"></div>${COLOUR_MAP[k].label}: ${v}`;
+    legendEl.appendChild(item);
+  });
+}
+
+// Star Wars designs
+TOPICS.starwars.designs = [
+  {
+    name: 'Rebel Alliance', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','_','R','R','_','_','_','_','_','_','_',
+      '_','_','R','R','_','_','_','R','R','_','_','_','R','R','_','_',
+      '_','R','R','_','_','R','_','R','R','_','R','_','_','R','R','_',
+      '_','R','_','_','_','R','R','R','R','R','R','_','_','_','R','_',
+      'R','R','_','_','_','_','R','R','R','R','_','_','_','_','R','R',
+      'R','R','_','_','_','_','_','R','R','_','_','_','_','_','R','R',
+      'R','R','_','_','_','_','_','R','R','_','_','_','_','_','R','R',
+      'R','R','R','_','_','_','R','R','R','R','_','_','_','R','R','R',
+      'R','_','R','_','_','R','R','_','_','R','R','_','_','R','_','R',
+      'R','_','R','R','R','R','_','_','_','_','R','R','R','R','_','R',
+      'R','_','_','R','_','_','_','_','_','_','_','_','_','_','_','R',
+      '_','R','_','_','_','_','_','_','_','_','_','_','_','_','R','_',
+      '_','R','R','_','_','_','_','_','_','_','_','_','_','R','R','_',
+      '_','_','R','R','_','_','_','_','_','_','_','_','R','R','_','_',
+      '_','_','_','R','R','_','_','_','_','_','_','R','R','_','_','_',
+      '_','_','_','_','R','R','R','R','R','R','R','R','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Lightsaber Cross', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','R','R','_','_','_','_','_','_','_','_','_','_','B','B','_',
+      '_','R','R','R','_','_','_','_','_','_','_','_','B','B','B','_',
+      '_','_','R','R','R','_','_','_','_','_','_','B','B','B','_','_',
+      '_','_','_','R','R','R','_','_','_','_','B','B','B','_','_','_',
+      '_','_','_','_','R','R','R','_','_','B','B','B','_','_','_','_',
+      '_','_','_','_','_','R','R','R','B','B','B','_','_','_','_','_',
+      '_','_','_','_','_','_','R','B','B','B','_','_','_','_','_','_',
+      '_','_','_','_','_','_','B','B','B','R','_','_','_','_','_','_',
+      '_','_','_','_','_','B','B','B','R','R','R','_','_','_','_','_',
+      '_','_','_','_','B','B','B','_','_','R','R','R','_','_','_','_',
+      '_','_','_','K','B','B','_','_','_','_','R','R','K','_','_','_',
+      '_','_','K','K','K','_','_','_','_','_','_','K','K','K','_','_',
+      '_','K','K','K','_','_','_','_','_','_','_','_','K','K','K','_',
+      'K','K','K','_','_','_','_','_','_','_','_','_','_','K','K','K',
+      'K','K','_','_','_','_','_','_','_','_','_','_','_','_','K','K',
+    ]
+  },
+  {
+    name: 'Maul Saber', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','R','R',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','R','R','R',
+      '_','_','_','_','_','_','_','_','_','_','_','_','R','R','R','_',
+      '_','_','_','_','_','_','_','_','_','_','_','R','R','R','_','_',
+      '_','_','_','_','_','_','_','_','_','_','R','R','R','_','_','_',
+      '_','_','_','_','_','_','_','_','_','K','K','R','_','_','_','_',
+      '_','_','_','_','_','_','_','_','K','B','K','_','_','_','_','_',
+      '_','_','_','_','_','_','_','K','G','K','_','_','_','_','_','_',
+      '_','_','_','_','_','_','K','G','K','_','_','_','_','_','_','_',
+      '_','_','_','_','_','K','B','K','_','_','_','_','_','_','_','_',
+      '_','_','_','_','R','K','K','_','_','_','_','_','_','_','_','_',
+      '_','_','_','R','R','R','_','_','_','_','_','_','_','_','_','_',
+      '_','_','R','R','R','_','_','_','_','_','_','_','_','_','_','_',
+      '_','R','R','R','_','_','_','_','_','_','_','_','_','_','_','_',
+      'R','R','R','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      'R','R','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Yoda', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','G','G','G','G','G','G','G','_','_','_','_','_',
+      '_','_','_','G','G','K','G','G','K','G','G','G','_','_','_','_',
+      '_','G','G','G','G','K','G','G','K','G','G','G','G','G','G','_',
+      '_','_','_','G','G','G','G','G','G','G','G','G','G','_','_','_',
+      '_','_','_','_','G','G','G','G','G','G','G','G','_','_','_','_',
+      '_','_','_','_','_','G','G','G','G','G','G','_','_','_','_','_',
+      '_','_','_','_','_','OL','O','O','OL','OL','OL','_','_','_','_','_',
+      '_','_','_','_','_','OL','O','O','OL','OL','OL','_','_','_','_','_',
+      '_','_','_','_','G','OL','K','K','OL','G','OL','_','_','_','_','_',
+      '_','_','_','_','_','OL','O','O','OL','OL','OL','_','_','_','_','_',
+      '_','_','_','_','_','OL','OL','OL','OL','OL','OL','_','_','_','_','_',
+      '_','_','_','_','_','_','K','_','_','K','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Darth Maul', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','W','_','_','_','W','W','_','_','_','W','_','_','_',
+      '_','_','_','W','W','R','R','W','W','R','R','W','W','_','_','_',
+      '_','_','_','R','W','R','K','W','W','K','R','W','R','_','_','_',
+      'W','_','R','R','R','R','R','K','K','R','R','R','R','R','_','W',
+      'W','W','R','R','K','R','R','R','R','R','R','K','R','R','W','W',
+      '_','W','W','K','R','K','R','R','R','R','K','R','K','W','W','_',
+      '_','_','R','R','K','Y','K','R','R','K','Y','K','R','R','_','_',
+      '_','_','K','R','R','K','K','K','K','K','K','R','R','K','_','_',
+      '_','_','K','K','R','R','R','R','R','R','R','R','K','K','_','_',
+      '_','_','R','K','R','R','K','R','R','K','R','R','K','R','_','_',
+      '_','_','_','R','R','K','Y','K','K','Y','K','R','R','_','_','_',
+      '_','_','_','_','R','R','R','Y','Y','R','R','R','_','_','_','_',
+      '_','_','_','_','K','R','R','K','K','R','R','K','_','_','_','_',
+      '_','_','_','_','_','K','R','K','K','R','K','_','_','_','_','_',
+      '_','_','_','_','_','_','K','R','R','K','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Kylo Saber', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','_','_','R','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','R','W','R','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','R','W','R','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','R','W','R','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','R','W','R','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','R','W','R','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','R','W','R','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','R','W','R','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','R','W','R','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','R','W','R','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','R','W','R','_','_','_','_','_','_',
+      '_','_','_','R','R','R','K','K','W','K','K','R','R','R','_','_',
+      '_','_','_','R','R','R','K','K','K','K','K','R','R','R','_','_',
+      '_','_','_','_','_','_','_','K','OL','K','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','K','OL','K','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','K','K','K','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'X-Wing', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','K','_','_','_','_','K','_','_','_','_','_',
+      '_','_','_','_','_','W','W','_','_','W','W','_','_','_','_','_',
+      '_','_','_','_','_','K','W','W','W','W','K','_','_','_','_','_',
+      '_','_','_','W','W','K','W','K','K','W','K','W','W','_','_','_',
+      '_','_','K','R','R','K','W','K','K','W','K','R','R','K','_','_',
+      '_','_','K','R','W','W','W','K','K','W','W','W','R','K','_','_',
+      '_','_','W','W','W','W','W','W','W','W','W','W','W','W','_','_',
+      '_','_','W','_','_','_','W','TB','TB','W','_','_','_','W','_','_',
+      '_','_','W','_','_','_','W','TB','TB','W','_','_','_','W','_','_',
+      '_','_','_','_','_','_','W','TB','TB','W','_','_','_','_','_','_',
+      '_','_','R','_','_','_','W','R','R','W','_','_','_','R','_','_',
+      '_','_','R','_','_','_','W','R','R','W','_','_','_','R','_','_',
+      '_','_','_','_','_','_','W','R','R','W','_','_','_','_','_','_',
+      '_','_','R','_','_','_','W','W','W','W','_','_','_','R','_','_',
+      '_','_','R','_','_','_','_','W','W','_','_','_','_','R','_','_',
+      '_','_','_','_','_','_','_','W','W','_','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'TIE Fighter', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','OL','OL','_','_','_','_','OL','OL','_','_','_','_',
+      '_','_','_','OL','K','K','_','_','_','_','K','K','OL','_','_','_',
+      '_','_','OL','K','K','_','_','_','_','_','_','K','K','OL','_','_',
+      '_','OL','K','K','_','_','K','K','K','K','_','_','K','K','OL','_',
+      '_','OL','K','_','_','K','K','TB','TB','K','K','_','_','K','OL','_',
+      '_','OL','K','K','K','K','TB','TB','TB','TB','K','K','K','K','OL','_',
+      '_','OL','K','K','K','K','TB','TB','TB','TB','K','K','K','K','OL','_',
+      '_','OL','K','_','_','K','K','TB','TB','K','K','_','_','K','OL','_',
+      '_','OL','K','K','_','_','R','K','K','R','_','_','K','K','OL','_',
+      '_','_','OL','K','K','_','_','_','_','_','_','K','K','OL','_','_',
+      '_','_','_','OL','K','K','_','_','_','_','K','K','OL','_','_','_',
+      '_','_','_','_','OL','OL','_','_','_','_','OL','OL','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+    ]
+  },
+];
+
+// Ninjago designs (8 submitted, Nadakhan excluded — needs 53 orange, stock is 45)
+TOPICS.ninjago.designs = [
+  {
+    name: 'Kai', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','R','R','R','R','R','R','_','_','_','_','_',
+      '_','_','_','_','R','R','R','R','R','R','R','R','_','_','_','_',
+      '_','_','_','R','R','R','R','R','R','R','R','R','R','_','_','_',
+      '_','_','R','R','R','R','R','R','R','R','R','R','R','R','_','_',
+      '_','_','R','Y','K','Y','Y','Y','Y','Y','Y','K','Y','R','_','_',
+      '_','_','R','Y','Y','K','K','Y','Y','K','K','Y','Y','R','_','_',
+      '_','_','R','Y','Y','K','W','Y','Y','W','K','Y','Y','R','_','_',
+      '_','_','R','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','R','_','_',
+      '_','_','R','R','R','R','R','R','R','R','R','R','R','R','_','_',
+      '_','_','R','R','R','R','R','R','R','R','R','R','R','R','_','_',
+      '_','_','_','R','R','R','R','R','R','R','R','R','R','_','_','_',
+      '_','_','_','R','R','R','R','R','R','R','R','R','R','_','_','_',
+      '_','_','_','_','_','R','R','R','R','R','R','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Jay', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','B','B','B','B','B','B','_','_','_','_','_',
+      '_','_','_','_','B','B','B','B','B','B','B','B','_','_','_','_',
+      '_','_','_','B','B','B','B','B','B','B','B','B','B','_','_','_',
+      '_','_','B','B','B','B','B','B','B','B','B','B','B','B','_','_',
+      '_','_','B','Y','K','Y','Y','Y','Y','Y','Y','K','Y','B','_','_',
+      '_','_','B','Y','Y','K','K','Y','Y','K','K','Y','Y','B','_','_',
+      '_','_','B','Y','Y','K','W','Y','Y','W','K','Y','Y','B','_','_',
+      '_','_','B','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','B','_','_',
+      '_','_','B','B','B','B','B','B','B','B','B','B','B','B','_','_',
+      '_','_','B','B','B','B','B','B','B','B','B','B','B','B','_','_',
+      '_','_','_','B','B','B','B','B','B','B','B','B','B','_','_','_',
+      '_','_','_','B','B','B','B','B','B','B','B','B','B','_','_','_',
+      '_','_','_','_','_','B','B','B','B','B','B','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Lloyd', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','K','K','K','K','K','K','_','_','_','_','_',
+      '_','_','_','_','K','K','G','OL','OL','G','K','K','_','_','_','_',
+      '_','_','_','K','K','G','OL','G','G','OL','G','K','K','_','_','_',
+      '_','_','G','G','G','OL','G','G','G','G','OL','G','G','G','_','_',
+      '_','K','K','Y','K','K','Y','Y','Y','Y','K','K','Y','K','K','_',
+      '_','K','K','Y','Y','Y','K','Y','Y','K','Y','Y','Y','K','K','_',
+      '_','K','K','Y','K','W','Y','Y','Y','Y','W','K','Y','K','K','_',
+      '_','K','K','Y','K','K','K','Y','Y','K','K','K','Y','K','K','_',
+      '_','_','G','G','G','G','G','G','G','G','G','G','G','G','_','_',
+      '_','_','G','OL','OL','G','G','OL','OL','G','G','OL','OL','G','_','_',
+      '_','_','_','G','OL','OL','OL','G','G','OL','OL','OL','G','_','_','_',
+      '_','_','_','G','G','G','OL','OL','OL','OL','G','G','G','_','_','_',
+      '_','_','_','_','_','G','G','G','G','G','G','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Reveal Blade', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','R','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','R','R','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','R','R','R','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','R','R','R','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','R','R','R','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','R','R','R','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','R','R','R','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','R','R','R','_','_','_','_','_','_','_',
+      '_','_','_','_','_','Y','R','R','R','Y','_','_','_','_','_','_',
+      '_','_','_','_','_','Y','Y','R','Y','Y','_','_','_','_','_','_',
+      '_','_','_','_','_','O','Y','R','Y','O','_','_','_','_','_','_',
+      '_','_','_','_','_','_','Y','R','Y','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','Y','Y','Y','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','Y','Y','Y','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','Y','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','R','_','_','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Cole Hammer', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','O','_','_','_','_','_','O','O','_','_','_','_',
+      '_','_','_','O','O','K','K','K','K','K','O','O','_','_','_','_',
+      '_','_','O','O','O','K','K','K','K','K','O','O','_','_','_','_',
+      '_','_','_','O','O','K','K','K','K','K','O','O','_','_','_','_',
+      '_','_','_','_','O','_','_','O','_','_','O','O','_','_','_','_',
+      '_','_','_','_','_','_','_','O','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','O','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','K','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','O','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','O','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','K','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','O','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','O','O','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','O','O','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','O','_','_','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Sora', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','B','_','_','_','_','_','_','B','_','_','_','_',
+      '_','_','_','B','P','B','_','_','_','_','B','P','B','_','_','_',
+      '_','_','B','B','P','P','B','_','_','B','P','P','B','B','_','_',
+      '_','_','B','P','P','P','P','B','B','P','P','P','P','B','_','_',
+      '_','_','B','B','B','B','B','B','B','B','B','B','B','B','_','_',
+      '_','B','B','P','P','P','P','P','P','P','P','P','P','B','B','_',
+      '_','B','B','P','Y','P','Y','P','Y','P','Y','P','P','P','B','_',
+      '_','B','P','P','Y','K','Y','P','Y','Y','K','Y','Y','P','B','_',
+      '_','B','P','Y','K','W','K','Y','Y','K','W','K','Y','P','B','_',
+      '_','B','B','Y','Y','Y','Y','B','B','Y','Y','Y','Y','B','B','_',
+      '_','B','B','B','B','B','B','B','B','B','B','B','B','B','B','_',
+      '_','_','B','B','B','B','B','B','B','B','B','B','B','_','_','_',
+      '_','_','_','B','B','B','B','B','B','B','B','B','B','_','_','_',
+      '_','_','_','_','B','B','B','B','B','B','B','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Sora Maskless', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','P','P','_','_','_','_','_','_','P','P','_','_','_',
+      '_','_','_','P','P','P','_','_','_','_','P','P','P','_','_','_',
+      '_','_','_','_','B','B','B','B','B','B','B','B','_','_','_','_',
+      '_','_','_','B','P','P','P','P','P','P','P','P','B','_','_','_',
+      '_','_','B','P','P','P','P','P','P','P','P','P','P','B','_','_',
+      '_','B','P','P','P','P','P','P','P','P','P','P','P','P','B','_',
+      'B','B','P','P','Y','Y','Y','Y','Y','Y','Y','Y','P','P','B','B',
+      'B','B','B','P','K','K','Y','Y','Y','Y','K','K','P','B','B','B',
+      'B','B','B','Y','K','W','K','Y','Y','K','W','K','Y','B','B','B',
+      '_','B','B','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','B','B','_',
+      '_','_','B','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','B','_','_',
+      '_','_','_','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','_','_','_',
+      '_','_','_','Y','Y','Y','R','R','R','R','Y','Y','Y','_','_','_',
+      '_','_','_','_','Y','Y','Y','R','R','Y','Y','Y','_','_','_','_',
+      '_','_','_','_','_','Y','Y','Y','Y','Y','Y','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Nadakhan', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','K','K','K','K','_','_','_','_','_','_','_','_',
+      '_','_','_','K','K','_','_','K','_','_','_','_','_','_','_','_',
+      '_','_','K','K','_','_','O','O','O','_','_','_','_','_','_','_',
+      '_','_','K','_','_','_','O','O','O','_','_','_','_','_','_','_',
+      '_','_','_','_','G','G','O','O','O','G','G','_','_','_','_','_',
+      '_','_','_','O','O','G','G','G','G','G','O','O','_','_','_','_',
+      '_','_','O','O','_','G','G','OL','G','G','_','O','O','_','_','_',
+      '_','_','O','_','_','G','G','OL','G','G','_','_','O','_','_','_',
+      '_','Y','_','O','O','G','G','G','G','G','O','O','_','Y','_','_',
+      '_','_','_','O','_','O','O','O','O','O','_','O','_','_','_','_',
+      '_','_','O','O','_','_','O','O','O','_','_','O','O','_','_','_',
+      '_','Y','_','_','_','_','O','O','O','_','_','_','_','Y','_','_',
+      '_','_','_','_','_','_','O','O','O','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','Y','Y','Y','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','Y','Y','_','_','R','_','_','_','_',
+      '_','_','_','_','_','_','_','_','Y','Y','R','R','_','_','_','_',
+    ]
+  },
+];
+
+TOPICS.nature.designs = [
+  {
+    name: 'Lion', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','R','R','R','R','R','R','R','R','R','R','_','_','_',
+      '_','_','R','R','Y','R','R','R','R','R','R','Y','R','R','_','_',
+      '_','R','R','Y','Y','Y','R','R','R','R','Y','Y','Y','R','R','_',
+      '_','R','R','Y','O','Y','Y','Y','Y','Y','Y','O','Y','R','R','_',
+      '_','R','R','R','Y','Y','Y','Y','Y','Y','Y','Y','R','R','R','_',
+      '_','R','R','Y','Y','K','Y','Y','Y','Y','K','Y','Y','R','R','_',
+      '_','R','R','Y','Y','K','Y','Y','Y','Y','K','Y','Y','R','R','_',
+      '_','R','R','Y','Y','Y','O','O','O','O','Y','Y','Y','R','R','_',
+      '_','R','R','Y','W','W','W','W','W','W','W','Y','Y','R','R','_',
+      '_','R','R','W','W','W','K','W','W','K','W','W','W','R','R','_',
+      '_','R','R','R','W','W','K','K','K','K','W','W','R','R','R','_',
+      '_','R','R','R','R','W','W','W','W','W','W','R','R','R','R','_',
+      '_','_','R','R','R','R','R','R','R','R','R','R','R','_','_','_',
+      '_','_','_','R','R','R','R','R','R','R','R','R','_','_','_','_',
+      '_','_','_','_','_','R','R','R','R','R','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Bee', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','Y','Y','Y','_','_','_','_','_','_',
+      '_','_','_','_','_','_','Y','Y','Y','Y','Y','_','_','_','_','_',
+      '_','_','_','TB','TB','_','K','K','K','K','K','_','TB','TB','_','_',
+      '_','_','TB','TB','TB','TB','Y','Y','Y','Y','Y','TB','TB','TB','TB','_',
+      '_','_','TB','TB','TB','TB','K','K','K','K','K','TB','TB','TB','TB','_',
+      '_','_','_','TB','TB','_','Y','Y','Y','Y','Y','_','TB','TB','_','_',
+      '_','_','_','_','_','_','K','K','K','K','K','_','_','_','_','_',
+      '_','_','_','_','_','_','Y','Y','Y','Y','Y','_','_','_','_','_',
+      '_','_','_','_','_','_','Y','Y','Y','Y','Y','_','_','_','_','_',
+      '_','_','_','_','_','_','_','W','W','W','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','W','W','W','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','W','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Elephant', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','B','B','_','_','_','B','B','B','B','_','_','_','B','B','_',
+      'B','P','P','B','_','B','B','B','B','B','B','_','B','P','P','B',
+      'B','P','P','B','B','B','K','B','B','K','B','B','B','P','P','B',
+      'B','P','P','P','B','B','K','B','B','K','B','B','P','P','P','B',
+      'B','P','B','B','B','B','B','B','B','B','B','B','B','B','P','B',
+      'B','P','B','_','B','B','B','B','B','B','B','B','_','B','P','B',
+      '_','B','_','_','B','W','B','B','B','B','W','B','_','_','B','_',
+      '_','_','_','_','_','W','_','B','B','_','W','_','_','_','_','_',
+      '_','_','_','_','_','W','_','B','B','_','W','_','_','_','_','_',
+      '_','_','_','_','_','_','_','B','B','_','_','B','_','_','_','_',
+      '_','_','_','_','_','_','_','B','B','_','B','B','_','_','_','_',
+      '_','_','_','_','_','_','_','B','B','B','B','B','_','_','_','_',
+      '_','_','_','_','_','_','_','_','B','B','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Tiger', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','Y','Y','_','_','_','_','_','_','Y','Y','_','_','_',
+      '_','_','Y','O','O','Y','_','_','_','_','Y','O','O','Y','_','_',
+      '_','_','Y','O','O','Y','Y','_','_','Y','Y','O','O','Y','_','_',
+      '_','_','_','Y','Y','K','Y','Y','Y','Y','K','Y','Y','_','_','_',
+      '_','_','Y','Y','Y','Y','K','Y','Y','K','Y','Y','Y','Y','_','_',
+      '_','_','K','K','Y','Y','K','Y','Y','K','Y','Y','K','K','_','_',
+      '_','_','Y','Y','Y','O','O','Y','Y','O','O','Y','Y','Y','_','_',
+      '_','_','K','K','Y','W','O','Y','Y','O','W','Y','K','K','_','_',
+      '_','_','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','_','_',
+      '_','_','K','K','K','Y','Y','P','P','Y','Y','K','K','K','_','_',
+      '_','_','K','Y','W','W','W','W','W','W','W','W','Y','K','_','_',
+      '_','_','_','W','W','R','W','W','W','W','R','W','W','_','_','_',
+      '_','_','_','W','W','W','R','R','R','R','W','W','W','_','_','_',
+      '_','_','_','_','W','W','W','W','W','W','W','W','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Panda', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','W','W','W','_','_','_','_','_','W','W','_','_','_',
+      '_','_','W','K','K','W','_','_','_','_','W','K','K','W','_','_',
+      '_','_','W','K','K','W','W','_','_','W','W','K','K','W','_','_',
+      '_','_','_','W','W','W','W','W','W','W','W','W','W','_','_','_',
+      '_','_','W','W','K','K','K','W','W','K','K','K','W','W','_','_',
+      '_','_','W','K','K','K','W','W','W','W','K','K','K','W','_','_',
+      '_','_','W','K','K','W','W','W','W','W','W','K','K','W','_','_',
+      '_','_','W','K','K','B','W','W','W','W','B','K','K','W','_','_',
+      '_','_','W','W','K','K','K','W','W','K','K','K','W','W','_','_',
+      '_','_','W','W','W','W','W','P','P','W','W','W','W','W','_','_',
+      '_','_','_','W','W','W','W','W','W','W','W','W','W','_','_','_',
+      '_','_','_','_','W','W','K','K','K','K','W','W','_','_','_','_',
+      '_','_','_','_','_','W','W','W','W','W','W','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Duck', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','Y','Y','Y','_','_','_','_','_','_','_',
+      '_','_','_','O','O','Y','K','Y','Y','Y','_','_','_','_','_','_',
+      '_','_','_','O','O','Y','Y','Y','Y','Y','_','_','_','_','_','_',
+      '_','_','_','_','_','Y','Y','Y','Y','Y','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','Y','Y','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','Y','Y','Y','_','_','_','_','_','_','Y',
+      '_','_','_','_','_','Y','Y','Y','Y','Y','Y','_','_','_','Y','Y',
+      '_','_','_','_','Y','Y','K','Y','Y','Y','Y','Y','Y','Y','Y','Y',
+      '_','_','_','_','Y','K','Y','Y','Y','Y','Y','K','K','Y','Y','_',
+      '_','_','_','_','Y','K','Y','Y','Y','K','K','Y','Y','Y','_','_',
+      '_','_','_','_','Y','Y','K','K','K','Y','Y','Y','Y','_','_','_',
+      '_','_','_','_','_','Y','Y','Y','Y','Y','Y','Y','_','_','_','_',
+      '_','_','_','_','_','_','_','_','O','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','O','O','_','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Rooster', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','R','_','R','_','R','_','_','_','_','_',
+      '_','_','_','_','_','_','R','R','R','R','R','_','_','_','_','_',
+      '_','_','_','_','_','_','W','W','W','R','_','_','_','_','_','_',
+      '_','_','_','_','_','W','K','W','W','W','_','_','_','_','_','_',
+      '_','_','_','O','O','W','W','W','W','W','_','_','_','_','_','_',
+      '_','_','_','O','O','W','W','W','W','W','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','W','W','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','W','W','W','_','_','_','_','_','_','W',
+      '_','_','_','_','_','W','W','W','W','W','W','_','_','_','W','W',
+      '_','_','_','_','W','W','K','W','W','W','W','W','W','W','W','W',
+      '_','_','_','_','W','K','W','W','W','W','W','K','K','W','W','_',
+      '_','_','_','_','W','K','W','W','W','K','K','W','W','W','_','_',
+      '_','_','_','_','W','W','K','K','K','W','W','W','W','_','_','_',
+      '_','_','_','_','_','W','W','W','W','W','W','W','_','_','_','_',
+      '_','_','_','_','_','_','_','_','R','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','R','R','_','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Nemo', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','TB','TB','TB','TB','TB','TB','TB','TB','TB','TB','TB','_','_','_',
+      '_','_','TB','TB','O','K','O','O','TB','TB','TB','O','TB','_','_','_',
+      '_','_','TB','O','O','K','O','O','K','TB','O','O','TB','_','_','_',
+      '_','_','TB','O','O','K','O','K','O','O','O','O','TB','_','_','_',
+      '_','_','TB','O','O','K','O','O','K','TB','O','O','TB','_','_','_',
+      '_','_','TB','TB','O','K','O','O','TB','TB','TB','O','TB','_','_','_',
+      '_','_','TB','TB','TB','TB','TB','TB','TB','TB','TB','TB','TB','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Mushroom', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','R','R','R','R','R','R','_','_','_','_','_',
+      '_','_','_','_','R','R','W','R','R','W','R','R','_','_','_','_',
+      '_','_','_','R','W','R','R','R','R','R','R','W','R','_','_','_',
+      '_','_','R','R','R','R','W','R','R','W','R','R','R','R','_','_',
+      '_','_','R','R','W','R','R','R','R','R','R','W','R','R','_','_',
+      '_','_','_','R','W','W','R','R','R','R','W','W','R','_','_','_',
+      '_','_','_','_','R','R','R','W','W','R','R','R','_','_','_','_',
+      '_','_','_','_','_','R','W','W','W','W','R','_','_','_','_','_',
+      '_','_','_','_','_','_','W','W','W','W','_','_','_','_','_','_',
+      '_','_','_','_','_','_','W','W','W','W','_','_','_','_','_','_',
+      '_','_','_','_','_','_','W','W','W','W','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Rainbow', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','R','R','R','R','R','R','_','_','_','_','_',
+      '_','_','_','_','R','R','O','O','O','O','R','R','_','_','_','_',
+      '_','_','_','R','R','O','O','Y','Y','O','O','R','R','_','_','_',
+      '_','_','R','R','O','O','Y','Y','Y','Y','O','O','R','R','_','_',
+      '_','_','R','O','O','Y','Y','G','G','Y','Y','O','O','R','_','_',
+      '_','R','R','O','Y','Y','G','G','G','G','Y','Y','O','R','R','_',
+      '_','R','O','O','Y','G','G','B','B','G','G','Y','O','O','R','_',
+      'R','R','O','Y','Y','G','B','B','B','B','G','Y','Y','O','R','R',
+      'R','O','O','Y','G','G','B','P','P','B','G','G','Y','O','O','R',
+      'R','O','Y','Y','G','B','B','P','P','B','B','G','Y','Y','O','R',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Sun', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','R','_','_','_','_','_','_','_','_','_','_','R','_','_',
+      '_','R','O','R','_','_','_','Y','Y','_','_','_','R','O','R','_',
+      '_','_','R','O','R','_','_','Y','Y','_','_','R','O','R','_','_',
+      '_','_','_','R','O','_','_','Y','Y','_','_','O','R','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','O','O','O','O','_','_','_','_','_','_',
+      '_','_','Y','Y','Y','_','O','Y','Y','O','_','Y','Y','Y','_','_',
+      '_','_','Y','Y','Y','_','O','Y','Y','O','_','Y','Y','Y','_','_',
+      '_','_','_','_','_','_','O','O','O','O','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','R','O','_','_','Y','Y','_','_','O','R','_','_','_',
+      '_','_','R','O','R','_','_','Y','Y','_','_','R','O','R','_','_',
+      '_','R','O','R','_','_','_','Y','Y','_','_','_','R','O','R','_',
+      '_','_','R','_','_','_','_','_','_','_','_','_','_','R','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Rain Cloud', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','W','_','_','_','_','W','_','_','_','_','_',
+      '_','_','_','_','W','W','W','_','_','W','W','W','_','_','_','_',
+      '_','_','_','W','W','W','W','W','W','W','W','W','W','_','_','_',
+      '_','_','W','W','W','W','W','W','W','W','W','W','W','W','_','_',
+      '_','_','W','W','W','W','W','W','W','W','W','W','W','W','_','_',
+      '_','_','_','_','B','_','_','_','B','_','_','B','_','B','_','_',
+      '_','_','_','B','_','_','B','_','_','_','_','B','_','_','_','_',
+      '_','_','_','B','_','_','B','_','_','B','_','_','_','B','_','_',
+      '_','_','B','_','_','B','_','_','_','B','_','_','_','_','_','_',
+      '_','_','B','_','_','B','_','B','_','_','_','_','B','_','_','_',
+      '_','_','_','_','_','_','_','B','_','_','B','_','B','_','_','_',
+      '_','_','_','B','_','B','_','_','_','B','_','_','_','B','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+    ]
+  },
+  {
+    name: 'Sun Cloud', orientLabel: 'Rectangle · 16×16', cols: 16, rows: 16,
+    grid: [
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','Y','Y','Y','_','_',
+      '_','_','_','_','_','_','W','W','W','_','Y','Y','Y','Y','Y','_',
+      '_','_','_','_','_','W','W','W','W','W','W','Y','Y','Y','Y','_',
+      '_','_','_','_','W','W','W','W','W','W','W','W','Y','Y','Y','_',
+      '_','_','_','W','W','W','W','W','W','W','W','W','W','Y','Y','_',
+      '_','_','W','W','W','W','W','W','W','W','W','W','W','W','W','_',
+      '_','_','W','W','W','W','W','W','W','W','W','W','W','W','W','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+      '_','_','_','_','_','_','_','_','_','_','_','_','_','_','_','_',
+    ]
+  },
+];
+</script>
+</body>
+</html>
